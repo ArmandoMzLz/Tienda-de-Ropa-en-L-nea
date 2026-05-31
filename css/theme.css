@@ -1,0 +1,18 @@
+:root {
+    --primary-color: #fefae0;
+    --secondary-color: #faedcd;
+    --accent-color: #e9edc9;
+    --dark-accent-color: #ccd5ae;
+    --contrast-color: #d4a373;
+
+    --border-radius-container: 15px;
+    --border-radius-button: 10px;
+}
+
+* {
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+}
+
+body {
+    background-color: var(--primary-color);
+}
