@@ -1,4 +1,6 @@
 @import url("/css/theme.css");
+@import url("/css/header.css");
+@import url("/css/footer.css");
 
 * {
     margin: 0;
@@ -8,10 +10,14 @@
 
 body {
     display: flex;
+    flex-direction: column;
+}
+
+main {
+    flex: 1;
+    display: flex;
     align-items: center;
     justify-content: center;
-    flex-direction: column;
-    height: 100vh;
 }
 
 .container {
@@ -126,7 +132,7 @@ body {
     height: 100%;
     overflow: hidden;
     transition: all 0.6s ease-in-out;
-    z-index: 1000;
+    z-index: 900;
     box-shadow: 0 0 10px black;
 }
 

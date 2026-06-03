@@ -1,0 +1,98 @@
+@import url("/css/theme.css");
+
+footer {
+    width: 100%;
+    bottom: 0;
+    right: 0;
+    left: 0;
+    background-color: var(--dark-accent-color);
+    z-index: 999;
+}
+
+@media (max-height: 800px) {
+    footer {
+        position: static;
+    }
+}
+
+.footer-distributed {
+    box-sizing: border-box;
+    widows: 100%;
+    text-align: left;
+    padding: 30px 30px 50px 30px;
+    margin-top: 10px;
+}
+
+.footer-distributed .footer-left, .footer-distributed .footer-right, .footer-distributed .footer-center {
+    display: inline-block;
+    vertical-align: top;
+}
+
+.footer-distributed .footer-left {
+    width: 28%;
+}
+
+.footer-distributed .footer-links {
+    margin: 20px 0 12px;
+}
+
+.footer-distributed .footer-links a {
+    display: inline-block;
+    line-height: 1.8;
+    text-decoration: none;
+    color: black;
+}
+
+.footer-distributed .footer-links a:hover {
+    color: var(--contrast-color)
+}
+
+.footer-distributed .footer-center {
+    width: 38%;
+}
+
+.footer-distributed .footer-center img {
+    width: 20px;
+    height: 20px;
+    text-align: center;
+    line-height: 30px;
+    margin: 10px 15px;
+    vertical-align: middle;
+}
+
+.footer-distributed .footer-center p {
+    display: inline-block;
+    vertical-align: middle;
+    margin: 0;
+}
+
+.footer-distributed .footer-right {
+    width: 28%;
+}
+
+.footer-distributed .footer-company-about {
+    line-height: 20px;
+    font-size: 15px;
+    margin: 0;
+}
+
+.footer-distributed .footer-icons a{
+    display: inline-block;
+    cursor: pointer;
+    text-align: center;
+}
+
+.footer-distributed .footer-icons a img {
+    width: 20px;
+    height: 20px;
+    margin: 5px;
+}
+
+@media (max-width:880px) {
+    .footer-distributed .footer-left, .footer-distributed .footer-right, .footer-distributed .footer-center {
+        display: block;
+        width: 100%;
+        margin-bottom: 40px;
+        text-align: center;
+    }
+}
