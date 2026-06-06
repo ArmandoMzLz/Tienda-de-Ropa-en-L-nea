@@ -7,10 +7,10 @@
             <span class="bar"></span>
         </button>
         <ul class="navbar-menu">
-            <li><a href="#"><img src="/images/search.svg"></a></li>
-            <li><a href="#"><img src="/images/account.svg"></a></li>
-            <li><a href="#"><img src="/images/wallet.svg"></a></li>
-            <li><a href="#"><img src="/images/bag.svg"></a></li>
+            <li><a href="#"><img src="/images/icons/search.svg"></a></li>
+            <li><a href="#"><img src="/images/icons/account.svg"></a></li>
+            <li><a href="#"><img src="/images/icons/wallet.svg"></a></li>
+            <li><a href="#"><img src="/images/icons/bag.svg"></a></li>
             </ul>
     </div>
     <script src="/js/header.js"></script>

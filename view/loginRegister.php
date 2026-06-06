@@ -3,32 +3,49 @@
     <head>
         <meta charset="UTF-8" name="viewport" content="width=device-width, initial-scale=1.0">
         <link rel="stylesheet" type="text/css" href="/css/loginRegister.css">
-        
         <title>Kicks & Jerseys | Sign in | Sign up</title>
     </head>
     <body>
         <?php include 'header.php' ?>
         <main>
-            <div class="container" id="container">
+            <div class="container <?= !empty($errors) ? 'active' : '' ?>" id="container">
                 <div class="form-container sign-up">
-                    <form>
+                    <form method="POST" action="/controller/authController.php" novalidate>
+                        <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($_SESSION['csrf_token']) ?>">
                         <h1>Crear cuenta</h1><br>
-                        <input type="text" placeholder="Nombre" id="name" required>
-                        <input type="text" placeholder="Apellido(s)" id="last-name" required>
-                        <input type="email" placeholder="Correo Electrónico" id="email-sign-up" required>
-                        <input type="password" placeholder="Contraseña" id="pass-sign-in" required>
-                        <input type="password" placeholder="Confirmar Contraseña" id="confirm-pass" required>
-                        <br><button>Crear cuenta</button>
+                        <input type="text" name="nombre" placeholder="Nombre" value="<?= htmlspecialchars($nombre) ?>"   required>
+                        <input type="text" name="apellido" placeholder="Apellido(s)" value="<?= htmlspecialchars($apellido) ?>" required>
+                        <input type="email" name="email" placeholder="Correo Electrónico" value="<?= htmlspecialchars($email) ?>"    required>
+                        <input type="password" name="contrasena" placeholder="Contraseña" required>
+                        <input type="password" name="confirmar" placeholder="Confirmar Contraseña" required>
+                        <?php if (!empty($errors)): ?>
+                            <ul class="error-message">
+                                <?php foreach ($errors as $error): ?>
+                                    <li><?= htmlspecialchars($error) ?></li>
+                                <?php endforeach; ?>
+                            </ul>
+                        <?php endif; ?>
+                        <br>
+                        <button type="submit" name="action" value="register">Crear cuenta</button>
                     </form>
                 </div>
                 <div class="form-container sign-in">
-                    <form>
+                    <form method="POST" action="/controller/authController.php" novalidate>
+                        <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($_SESSION['csrf_token']) ?>">
                         <h1>Iniciar Sesión</h1><br>
-                        <input type="email" placeholder="Correo Electrónico" id="email-sign-in" required>
-                        <input type="password" placeholder="Contraseña" id="pass-sign-in" required>
-                        <br><button>Iniciar Sesión</button><br>
+                        <input type="email" name="email" placeholder="Correo Electrónico" required>
+                        <input type="password" name="contrasena" placeholder="Contraseña" required>
+                        <?php if (!empty($errors)): ?>
+                            <ul class="error-message">
+                                <?php foreach ($errors as $error): ?>
+                                    <li><?= htmlspecialchars($error) ?></li>
+                                <?php endforeach; ?>
+                            </ul>
+                        <?php endif; ?>
+                        <br>
+                        <button type="submit" name="action" value="login">Iniciar Sesión</button><br>
                         <a href="#">¿Olvidó su contraseña?</a>
-                        </form>
+                    </form>
                 </div>
                 <div class="toggle-container">
                     <div class="toggle">
@@ -39,7 +56,7 @@
                         </div>
                         <div class="toggle-panel toggle-right">
                             <h1>¿No tiene una cuenta?</h1><br>
-                            <p>Si aún no tiene una cuenta, puede registrase aquí</p><br>
+                            <p>Si aún no tiene una cuenta, puede registrarse aquí</p><br>
                             <button class="hidden" id="register">Registrarme</button>
                         </div>
                     </div>

@@ -12,11 +12,11 @@
     </div>
     <div class="footer-center">
         <div>
-            <img src="/images/telephone.svg">
+            <img src="/images/icons/telephone.svg">
             <p>+52 12-3456-7890</p>
         </div>
         <div>
-            <img src="/images/envelope.svg">
+            <img src="/images/icons/envelope.svg">
             <p>correo_ejemplo@email.com</p>
         </div>
     </div>
@@ -27,9 +27,9 @@
             productos de temporada, moda y calidad.
         </p>
         <div class="footer-icons">
-            <a href="#"><img src="/images/facebook.svg"></a>
-            <a href="#"><img src="/images/instagram.svg"></a>
-            <a href="#"><img src="/images/twitter-x.svg"></a>
+            <a href="#"><img src="/images/icons/facebook.svg"></a>
+            <a href="#"><img src="/images/icons/instagram.svg"></a>
+            <a href="#"><img src="/images/icons/twitter-x.svg"></a>
         </div>
     </div>
 </footer>
