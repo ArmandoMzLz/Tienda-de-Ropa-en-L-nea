@@ -8,13 +8,16 @@
 3. Para que SQL Server detecte el perfil compartido creado en userCredentials se deberá de:
 
 Click derecho sobre el servidor y elegir propiedades.
-[[!Paso1.png]]
+
+![Paso1](Paso1.png)
 
 Ir al apartado de Seguridad y seleccionar la opción de autenticación de Windows y SQL Server. Después dar click en Aceptar.
-[[!Paso2.png]]
+
+![Paso2](Paso2.png)
 
 Finalmente dan click derecho sobre el servidor y pulsan reiniciar.
-[[!Paso3.png]]
+
+![Paso3](Paso3.png)
 
 # Ejecución
 Para ejecutar el servidor se debe de posicionar en la carpeta raíz del proyecto, luego, en la consola de comandos (cmd) se escribe el siguiente comando: 
