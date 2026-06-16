@@ -1,0 +1,92 @@
+@import url("/css/theme.css");
+@import url("/css/header.css");
+@import url("/css/footer.css");
+
+main {
+  padding: 50px;
+  display: flex;
+  flex-direction: column;
+}
+
+.datos-producto {
+    width: 100%;
+    padding: 50px;
+    border-radius: 10px;
+    background-color: var(--secondary-color);
+}
+
+.datos-producto h1{
+  font-style: italic;
+}
+
+.datos-producto p {
+  font-size: 20px;
+  margin-bottom: 30px;
+}
+
+.radio-group {
+  display: flex;
+  gap: 0; 
+}
+
+input[type="radio"] {
+  appearance: none;
+  -webkit-appearance: none; 
+  margin: 0;
+}
+
+.custom-radio {
+  min-height: 40px;
+  min-width: 80px;
+  text-align: center;
+  cursor: pointer;
+  padding: 10px 20px;
+  border: 2px solid #ccc;
+  border-radius: 4px;
+  display: inline-block;
+  transition: all 0.2s ease;
+}
+
+.custom-radio:has(input:checked) {
+  background-color: var(--contrast-color);
+  color: white;
+}
+
+.cantidad-producto {
+  margin-top: 10px;
+  align-items: center;
+  justify-content: center;
+}
+
+.cantidad-producto input{
+  width: 70px;
+  height: 35px;
+  font-size: 25px;
+  border: 0;
+  text-align: center;
+  outline: 0;
+}
+
+.cantidad-producto span {
+  width: 35px;
+  height: 35px;
+  font-size: 30px;
+  font-weight: bolder;
+  cursor: pointer;
+  background-color: var(--contrast-color);
+}
+
+.anadir-carrito-button {
+  width: 320px;
+  font-size: 20px;
+  padding: 10px;
+  margin-top: 10px;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  background-color: var(--contrast-color);
+}
+
+.productos-relacionados {
+  background-color: var(--secondary-color);
+}

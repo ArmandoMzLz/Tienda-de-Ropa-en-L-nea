@@ -6,7 +6,7 @@ class Database {
 
     public static function getConnection() : PDO {
         if (self::$instance === null) {
-            $server = "";
+            $server = "DESKTOP-UUD5G95\SQLEXPRESS";
             $database = "KicksAndJerseys";
             $user = "php_app_login";
             $password = "1234567890";

@@ -4,6 +4,7 @@
         <meta charset="UTF-8" name="viewport" content="width=device-width, initial-scale=1.0">
         <link rel="stylesheet" type="text/css" href="/css/loginRegister.css">
         <title>Kicks & Jerseys | Sign in | Sign up</title>
+        <script src="https://www.google.com/recaptcha/enterprise.js" async defer></script> <!--API-->
     </head>
     <body>
         <?php include 'header.php' ?>
@@ -18,6 +19,9 @@
                         <input type="email" name="email" placeholder="Correo Electrónico" value="<?= htmlspecialchars($email) ?>"    required>
                         <input type="password" name="contrasena" placeholder="Contraseña" required>
                         <input type="password" name="confirmar" placeholder="Confirmar Contraseña" required>
+                        <div class="g-recaptcha" data-sitekey="6LcM1BctAAAAAOAIA0XhstH_3uQ7YXJKuubDb7UU" data-action="LOGIN"></div>
+                        <br/>
+                        <input type="submit" value="Submit">
                         <?php if (!empty($errors)): ?>
                             <ul class="error-message">
                                 <?php foreach ($errors as $error): ?>

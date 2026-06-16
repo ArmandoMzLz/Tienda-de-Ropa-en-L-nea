@@ -1,0 +1,130 @@
+@import url("/css/theme.css");
+@import url("/css/header.css");
+@import url("/css/footer.css");
+
+main {
+    padding: 20px 50px;
+}
+
+.saldo-actual, .metodo-pago {
+    margin: 0 50px;
+    padding: 30px;
+    border-radius: 10px;
+    background-color: var(--secondary-color);
+    overflow: auto;
+}
+
+.metodo-pago {
+    display: flex;
+    justify-content: center;
+    padding: 20px;
+}
+
+.saldo-actual p {
+    font-size: 25px;
+    font-style: italic;
+    margin-bottom: 10px;
+}
+
+.saldo-actual h1 {
+    margin: 5px 5px 10px 30px;
+    font-size: 50px;
+}
+
+.metodo-pago h1 {
+    margin: 10px 10px 20px;
+}
+
+.metodo-pago input {
+    text-align: center;
+    padding: 10px 15px;
+    margin: 5px;
+    font-size: 20px;
+    border-radius: 10px;
+    border: none;
+    width: 260px;
+}
+
+.metodo-pago .tarjeta-input {
+    margin: 5px;
+    width: 810px;
+}
+
+.cantidad-dinero {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+}
+
+.fila-cantidad, .fila-botones {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 5px;
+}
+
+
+.input-cantidad {
+    position: relative;
+    display: inline-block;
+}
+
+.input-cantidad::before {
+    content: "$";
+    position: absolute;
+    left: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 20px;
+    font-weight: bold;
+    pointer-events: none;
+    z-index: 1;
+}
+
+#cantidad {
+    padding-left: 30px;
+    text-align: center;
+}
+
+.cantidad-dinero span {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 40px;
+    height: 40px;
+    font-weight: bold;
+    font-size: 15px;
+    cursor: pointer;
+    background-color: var(--contrast-color);
+    border: none;
+}
+
+.cantidad-dinero .incButton {
+    height: 40px;
+    width: 80px;
+}
+
+.cantidad-dinero span:hover {
+    color: var(--secondary-color);
+    background-color: var(--darker-contrast-color);
+}
+
+button {
+    display: block;
+    margin: 50px auto 0;
+    width: 200px;
+    height: 60px;
+    font-size: 20px;
+    font-weight: bold;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    background-color: var(--contrast-color);
+    transition: 0.2s ease;
+}
+
+button:hover {
+    color: var(--secondary-color);
+    background-color: var(--darker-contrast-color);
+}
