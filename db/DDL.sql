@@ -15,9 +15,6 @@ CREATE TABLE dbo.Usuarios (
 		REFERENCES dbo.Usuarios_Roles(rolID)
 );
 
-SELECT * FROM dbo.Usuarios
-SELECT * FROM dbo.Usuarios_Login
-
 CREATE TABLE dbo.Usuarios_Login (
 	usuarioID INT NOT NULL PRIMARY KEY,
 	email VARCHAR(100) NOT NULL,
@@ -45,6 +42,7 @@ CREATE TABLE dbo.Usuarios_Roles (
 CREATE TABLE dbo.Productos (
 	productoID INT IDENTITY(1,1) PRIMARY KEY,
 	categoriaID INT NOT NULL,
+	marca VARCHAR(30) NOT NULL,
 	nombre VARCHAR(100) NOT NULL,
 	precioBase DECIMAL(10,2) NOT NULL,
 	estaDisponible BIT NOT NULL,

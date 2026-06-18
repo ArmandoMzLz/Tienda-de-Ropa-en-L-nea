@@ -2,17 +2,8 @@
 
 footer {
     width: 100%;
-    bottom: 0;
-    right: 0;
-    left: 0;
     background-color: var(--dark-accent-color);
     z-index: 999;
-}
-
-@media (max-height: 800px) {
-    footer {
-        position: static;
-    }
 }
 
 .footer-distributed {

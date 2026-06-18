@@ -1,19 +1,6 @@
 USE KicksAndJerseys;
 
---Datos base
-INSERT INTO dbo.Usuarios_Roles(nombre) 
-	VALUES ('Cliente'), ('Administrador');
-
-INSERT INTO dbo.Productos_Categorias(nombre)
-	VALUES ('Jersey'), ('Playeras'), ('Tacos'), ('Running'), ('Deportivos');
-
-INSERT INTO dbo.Pedidos_Status(nombre)
-	VALUES ('Pagado'), ('Enviado'), ('Entregado'), ('Cancelado');
-
-INSERT INTO dbo.Transacciones_Tipos(nombre)
-	VALUES ('Recarga'), ('Compra'), ('Devolución');
-
---Procedimientos Almacenados
+--Usuarios
 CREATE PROCEDURE dbo.sp_RegistrarUsuario
 	@nombre VARCHAR(50),
 	@apellido VARCHAR(50),
@@ -84,3 +71,95 @@ BEGIN
         ON u.usuarioID = ul.usuarioID
     WHERE ul.email = @email;
 END;
+
+--Productos
+CREATE INDEX ix_ProductosCategoriaMarca
+	ON dbo.Productos (categoriaID, marca)
+	INCLUDE (nombre, precioBase, estaDisponible, imagenBaseURL);
+
+CREATE INDEX ix_VariantesProductoID
+	ON dbo.Productos_Variantes (productoID)
+	INCLUDE (cantidad);
+
+CREATE PROCEDURE dbo.sp_ProductosBuscar
+	@categoriaID INT = NULL,
+	@marca VARCHAR(30) = NULL,
+	@nombre VARCHAR(100) = NULL,
+	@soloDisponible BIT = 1,
+	@pagina INT = 1,
+	@tamanoPagina INT = 20
+AS 
+BEGIN
+	SET NOCOUNT ON;
+
+	SELECT
+		p.productoID,
+		p.marca,
+		p.nombre,
+		p.precioBase,
+		p.estaDisponible,
+		p.imagenBaseURL,
+		c.nombre AS categoria,
+		SUM(v.cantidad) AS stockTotal
+	FROM dbo.Productos p
+	INNER JOIN dbo.Productos_Categorias c ON c.categoriaID = p.categoriaID
+	LEFT JOIN dbo.Productos_Variantes v ON v.productoID = p.productoID
+	WHERE (
+		@categoriaID IS NULL OR p.categoriaID = @categoriaID)
+		AND (@marca IS NULL OR p.marca LIKE '%' + @marca + '%')
+		AND (@nombre IS NULL OR p.nombre LIKE '%')
+		AND (@soloDisponible = 0 OR p.estaDisponible = 1)
+	GROUP BY
+		p.productoID, p.marca, p.nombre, p.precioBase, p.estaDisponible, p.imagenBaseURL, c.nombre
+	ORDER BY p.nombre
+	OFFSET (@pagina - 1) * @tamanoPagina ROWS
+	FETCH NEXT @tamanoPagina ROWS ONLY
+	OPTION (RECOMPILE);
+END;
+
+CREATE PROCEDURE dbo.sp_ProductosPorCategoria
+	@categoriaID INT,
+	@limite INT = 12
+AS 
+BEGIN
+	SET NOCOUNT ON;
+
+	SELECT TOP (@limite)
+		p.productoID,
+		p.marca,
+		p.precioBase,
+		p.imagenBaseURL,
+		SUM(v.cantidad) AS stockTotal
+	FROM dbo.Productos p
+	LEFT JOIN dbo.Productos_Variantes v ON v.productoID = p.productoID
+	WHERE p.categoriaID = @categoriaID
+		AND p.estaDisponible = 1
+	GROUP BY
+		p.productoID, p.marca, p.nombre, p.precioBase, p.imagenBaseURL
+	ORDER BY p.nombre;
+END;
+
+CREATE PROCEDURE dbo.sp_ProductosSimilares
+	@productoID INT,
+	@categoriaID INT,
+	@marca VARCHAR(30),
+	@limite INT = 6
+AS 
+BEGIN
+	SET NOCOUNT ON;
+
+	SELECT TOP(@limite)
+		p.productoID,
+		p.marca,
+		p.nombre,
+		p.precioBase,
+		p.imagenBaseURL,
+		CASE WHEN p.marca = @marca THEN 0 ELSE 1 END AS prioridad
+	FROM dbo.Productos p
+	WHERE p.categoriaID = @categoriaID
+		AND p.productoID <> @productoID
+		AND p.estaDisponible = 1
+	ORDER BY prioridad, p.nombre
+END;
+
+--Pedidos

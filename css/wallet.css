@@ -87,7 +87,7 @@ main {
     text-align: center;
 }
 
-.cantidad-dinero span {
+.cantidad-dinero .incDecBtn {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -105,7 +105,7 @@ main {
     width: 80px;
 }
 
-.cantidad-dinero span:hover {
+.cantidad-dinero .incDecBtn:hover {
     color: var(--secondary-color);
     background-color: var(--darker-contrast-color);
 }
@@ -127,4 +127,25 @@ button {
 button:hover {
     color: var(--secondary-color);
     background-color: var(--darker-contrast-color);
+}
+
+@media (max-width:880px) {
+    main {
+        padding: 5px;
+    }
+
+    .saldo-actual, .metodo-pago {
+        padding: 10px;
+        margin: 10px;
+    }
+
+    .metodo-pago input, .metodo-pago .tarjeta-input {
+        display: flex;
+        flex-direction: column;
+        width: 300px;
+    }
+
+    .input-cantidad input {
+        width: 200px;
+    }
 }

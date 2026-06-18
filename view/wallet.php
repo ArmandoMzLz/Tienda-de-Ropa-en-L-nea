@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="es">
     <head>
         <meta charset="UTF-8" name="viewport" content="width=device-width, initial-scale=1.0">
         <link rel="stylesheet" type="text/css" href="/css/wallet.css">
@@ -23,16 +23,16 @@
                     <input type="text" placeholder="Titular">
                     <div class="cantidad-dinero">
                         <div class="fila-cantidad">
-                            <span id="btnAbajo">-</span>
+                            <span class="incDecBtn" id="btnAbajo">-</span>
                             <div class="input-cantidad">
                                 <input id="cantidad" type="text" value="1">
                             </div>
-                            <span id="btnArriba">+</span>
+                            <span class="incDecBtn" id="btnArriba">+</span>
                         </div>
                         <div class="fila-botones">
-                            <span class="incButton" id="inc10">+10</span>
-                            <span class="incButton" id="inc100">+100</span>
-                            <span class="incButton" id="inc1000">+1,000</span>
+                            <span class="incButton incDecBtn" id="inc10">+10</span>
+                            <span class="incButton incDecBtn" id="inc100">+100</span>
+                            <span class="incButton incDecBtn" id="inc1000">+1,000</span>
                         </div>
                     </div>
                     <button type="submit">Hacer Recarga</button>
