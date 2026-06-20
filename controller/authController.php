@@ -58,7 +58,7 @@ function userRegister(): void {
         $pdo = Database::getConnection();
         $hash = password_hash($contrasena, PASSWORD_BCRYPT);
 
-        $stmt = $pdo->prepare("EXEC dbo.sp_RegistrarUsuario
+        $stmt = $pdo->prepare("CALL dbo.sp_RegistrarUsuario
         @nombre = :nombre,
         @apellido = :apellido,
         @email = :email,
@@ -102,7 +102,7 @@ global $errors;
 
     try {
         $pdo  = Database::getConnection();
-        $stmt = $pdo->prepare("EXEC dbo.sp_IniciarSesion @email = :email");
+        $stmt = $pdo->prepare("CALL dbo.sp_IniciarSesion @email = :email");
         $stmt->bindValue(':email', $email, PDO::PARAM_STR);
         $stmt->execute();
 

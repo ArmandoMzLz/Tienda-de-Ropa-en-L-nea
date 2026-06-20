@@ -1,18 +1,44 @@
 @import url("/css/theme.css");
 @import url("/css/header.css");
 @import url("/css/footer.css");
+@import url("/css/productCard.css");
 
 main {
-  padding: 50px;
   display: flex;
   flex-direction: column;
+  width: 100%;
+  align-items: center;
+}
+
+h1 {
+  margin-top: 50px;
+}
+
+.contenedor-principal {
+  margin-top: 30px;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+.imagen-producto {
+  height: 800px;
+  width: 800px;
+  overflow: hidden;
+}
+
+.imagen-producto img {
+  height: 100%;
+  width: 100%;
+  object-fit: cover;
 }
 
 .datos-producto {
-    width: 100%;
-    padding: 50px;
-    border-radius: 10px;
-    background-color: var(--secondary-color);
+  width: 800px;
+  padding: 50px;
+  border-radius: 10px;
+  box-shadow: 10px 10px 20px 0 rgb(130, 129, 129);
+  background-color: var(--secondary-color);
 }
 
 .datos-producto h1{
@@ -53,9 +79,8 @@ input[type="radio"] {
 }
 
 .cantidad-producto {
+  display: flex;
   margin-top: 10px;
-  align-items: center;
-  justify-content: center;
 }
 
 .cantidad-producto input{
@@ -68,11 +93,14 @@ input[type="radio"] {
 }
 
 .cantidad-producto span {
+  display: block;
   width: 35px;
   height: 35px;
   font-size: 30px;
   font-weight: bolder;
   cursor: pointer;
+  text-align: center;
+  justify-content: center;
   background-color: var(--contrast-color);
 }
 
@@ -89,4 +117,56 @@ input[type="radio"] {
 
 .productos-relacionados {
   background-color: var(--secondary-color);
+}
+
+.talla-radio {
+    position: absolute;
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.talla-label {
+    display: inline-block;
+    padding: 8px 14px;
+    margin: 4px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    cursor: pointer;
+    user-select: none;
+}
+
+.talla-radio:checked + .talla-label {
+    background-color: var(--contrast-color);
+    color: #fff;
+}
+
+.talla-radio:focus-visible + .talla-label {
+    outline: 2px solid #000;
+    outline-offset: 2px;
+}
+
+@media (max-width: 880px) {
+  .contenedor-principal {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .imagen-producto {
+    width: 95%;
+    height: 95%;
+  }
+
+  .datos-producto {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 10px;
+    width: 95%;
+    height: 95%;
+  }
+
+  .datos-producto .anadir-carrito-button{
+    width: 300px;
+  }
 }

@@ -127,6 +127,7 @@ BEGIN
 	SELECT TOP (@limite)
 		p.productoID,
 		p.marca,
+		p.nombre,
 		p.precioBase,
 		p.imagenBaseURL,
 		SUM(v.cantidad) AS stockTotal
@@ -160,6 +161,34 @@ BEGIN
 		AND p.productoID <> @productoID
 		AND p.estaDisponible = 1
 	ORDER BY prioridad, p.nombre
+END;
+
+CREATE PROCEDURE dbo.sp_ProductosPorID
+    @productoID INT
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    SELECT
+        p.productoID,
+        p.categoriaID,
+        p.marca,
+        p.nombre,
+        p.precioBase,
+        p.estaDisponible,
+        p.imagenBaseURL,
+        c.nombre AS categoriaNombre
+    FROM       dbo.Productos            p
+    INNER JOIN dbo.Productos_Categorias c ON c.categoriaID = p.categoriaID
+    WHERE p.productoID = @productoID;
+
+    SELECT
+        varianteID,
+        talla,
+        cantidad
+    FROM dbo.Productos_Variantes
+    WHERE productoID = @productoID
+    ORDER BY talla;
 END;
 
 --Pedidos

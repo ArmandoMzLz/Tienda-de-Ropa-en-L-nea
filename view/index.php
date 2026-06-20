@@ -50,29 +50,49 @@
                     </div>
                 </a>
             </div>
-            <h1>Los más populares</h1>
-            <div class="carrusel-contenedor">
-                <div class="grupo">
-                    <div class="tarjeta">1</div>
-                    <div class="tarjeta">2</div>
-                    <div class="tarjeta">3</div>
-                    <div class="tarjeta">4</div>
-                    <div class="tarjeta">5</div>
-                    <div class="tarjeta">6</div>
-                    <div class="tarjeta">7</div>
-                    <div class="tarjeta">8</div>
-                    <div class="tarjeta">9</div>
-                    <div class="tarjeta">10</div>
-                </div>
-            </div>
             <h1>Jerseys</h1>
-            <div>
+                <?php
+                    define('ROOT_PATH', dirname(__DIR__));
+                    require_once ROOT_PATH . '/controller/getItemsController.php';
+                    require_once ROOT_PATH . '/controller/productCardController.php';
 
-            </div>
+                    $categoriaID = (int) ($_GET['categoriaID'] ?? 1);
+                    $productos = buscarProductosPorCategoria($categoriaID);
+                ?>
+                <div class="carrusel-contenedor">
+                    <?php if (empty ($productos)) : ?>
+                        <p>No hay productos disponibles.</p>
+                    <?php else: ?>
+                        <?php foreach (array_chunk($productos, 4) as $grupo): ?>
+                            <div class="grupo">
+                                <?php foreach ($grupo as $producto): ?>
+                                    <?php renderTarjetaProducto($producto); ?>
+                                <?php endforeach; ?>
+                            </div>
+                        <?php endforeach; ?>
+                    <?php endif; ?>
+                </div>
             <h1>Calzado</h1>
-            <div>
+                <?php
+                    require_once ROOT_PATH . '/controller/getItemsController.php';
+                    require_once ROOT_PATH . '/controller/productCardController.php';
 
-            </div>
+                    $categoriaID = (int) ($_GET['categoriaID'] ?? 2);
+                    $productos = buscarProductosPorCategoria($categoriaID);
+                ?>
+                <div class="carrusel-contenedor">
+                    <?php if (empty ($productos)) : ?>
+                        <p>No hay productos disponibles.</p>
+                    <?php else: ?>
+                        <?php foreach (array_chunk($productos, 4) as $grupo): ?>
+                            <div class="grupo">
+                                <?php foreach ($grupo as $producto): ?>
+                                    <?php renderTarjetaProducto($producto); ?>
+                                <?php endforeach; ?>
+                            </div>
+                        <?php endforeach; ?>
+                    <?php endif; ?>
+                </div>
         </main>
         <?php include 'footer.php' ?>
     </body>
