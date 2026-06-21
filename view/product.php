@@ -1,5 +1,5 @@
 <?php 
-    define('ROOT_PATH', dirname(__DIR__));
+    require_once dirname(__DIR__) . '/bootstrap.php';
     require_once ROOT_PATH . '/controller/getItemsController.php';
     require_once ROOT_PATH . '/controller/productCardController.php';
 

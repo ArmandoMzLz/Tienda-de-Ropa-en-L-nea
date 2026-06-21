@@ -185,3 +185,87 @@ main {
 .container.active .toggle-right {
     transform: translateX(200%);
 }
+
+.mensaje-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.45);
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    z-index: 9999;
+}
+
+.mensaje-contenedor {
+    position: relative;
+    background: white;
+    min-width: 320px;
+    max-width: 450px;
+
+    padding: 25px 30px;
+    border-radius: 12px;
+
+    box-shadow: 0 10px 30px rgba(0,0,0,.25);
+
+    animation: aparecer .25s ease;
+}
+
+.cerrar {
+    position: absolute;
+    top: 10px;
+    right: 15px;
+
+    border: none;
+    background: none;
+
+    font-size: 24px;
+    cursor: pointer;
+    color: #666;
+}
+
+.cerrar:hover {
+    color: #000;
+}
+
+.mensaje-error {
+    color: #b00020;
+    font-weight: bold;
+    text-align: center;
+}
+
+.mensaje-exito {
+    color: #0f8a3d;
+    font-weight: bold;
+    text-align: center;
+}
+
+@keyframes aparecer {
+    from {
+        opacity: 0;
+        transform: scale(.9);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+@media (max-width: 880px) {
+.container {
+    margin: 50px 0;
+}
+ 
+.container form {
+    padding: 0 15px;
+ }
+
+ .container form h1 {
+    font-size: 25px;
+ }
+
+ .toggle-panel p{
+    font-size: 15px;
+ }
+}

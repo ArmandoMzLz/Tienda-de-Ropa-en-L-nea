@@ -38,6 +38,9 @@ CREATE TABLE dbo.Usuarios_Roles (
 	nombre VARCHAR(15) NOT NULL
 );
 
+SELECT * FROM dbo.Usuarios
+SELECT * FROM dbo.Usuarios_Login
+
 --Productos
 CREATE TABLE dbo.Productos (
 	productoID INT IDENTITY(1,1) PRIMARY KEY,

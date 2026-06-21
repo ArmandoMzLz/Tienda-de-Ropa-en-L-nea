@@ -1,133 +1,92 @@
 <?php
-session_start();
+require_once dirname(__DIR__) . '/bootstrap.php';
+require_once ROOT_PATH . '/controller/registerController.php';
 
-define('ROOT_PATH', dirname(__DIR__));
-
-require_once ROOT_PATH . '/model/connection.php';
-
-if(empty($_SESSION['csrf_token'])) {
-    $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
+if (
+    !isset($_POST['csrf_token'], $_SESSION['csrf_token']) ||
+    !hash_equals($_SESSION['csrf_token'], $_POST['csrf_token'])
+) {
+    http_response_code(403);
+    die('Token de seguridad inválido. Recarga la página e intenta de nuevo.');
 }
 
-$errors = [];
-$nombre = '';
-$apellido = '';
-$email = '';
+$accion = $_POST['action'] ?? '';
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $action = $_POST['action'] ?? '';
+match ($accion) {
+    'register' => manejarRegistro(),
+    'login'    => manejarLogin(),
+    default    => redirigir('/view/loginRegister.php'),
+};
 
-    if ($action === 'register')
-        userRegister();
-
-    if($action === 'login')
-        userLogin();
-}
-
-require_once ROOT_PATH . '/view/loginRegister.php';
-    
-function userRegister(): void {
-    global $errors, $nombre, $apellido, $email;
-
-    if (!hash_equals($_SESSION['csrf_token'], $_POST['csrf_token'] ?? '')) {
-        $errors[] = 'Token de seguridad inválido. Recarga la página e intenta de nuevo.';
-        return;
-    }
-
-    $nombre = trim($_POST['nombre'] ?? '');
-    $apellido = trim($_POST['apellido'] ?? '');
-    $email = trim($_POST['email'] ?? '');
+function manejarRegistro(): void {
+    $nombre     = trim($_POST['nombre'] ?? '');
+    $apellido   = trim($_POST['apellido'] ?? '');
+    $email      = trim($_POST['email'] ?? '');
     $contrasena = $_POST['contrasena'] ?? '';
-    $contrasenaConfirmar = $_POST['confirmar'] ?? '';
+    $confirmar  = $_POST['confirmar'] ?? '';
 
-    if(empty($nombre))
-            $errors[] = 'El nombre es requerido.';
-    if(empty($apellido))
-            $errors[] = 'El apellido es requerido.';
-    if(!filter_var($email, FILTER_VALIDATE_EMAIL))
-            $errors[] = 'El correo electrónico no es válido.';
-    if(strlen($contrasena) < 8)
-            $errors[] = 'La contraseña debe de tener al menos 8 caracteres.';
-    if($contrasena !== $contrasenaConfirmar)
-            $errors[] = 'Las contraseñas no coinciden';
-
-    if(!empty($errors))
-            return;
-
-    try {
-        $pdo = Database::getConnection();
-        $hash = password_hash($contrasena, PASSWORD_BCRYPT);
-
-        $stmt = $pdo->prepare("CALL dbo.sp_RegistrarUsuario
-        @nombre = :nombre,
-        @apellido = :apellido,
-        @email = :email,
-        @contrasena_hash = :hash");
-
-        $stmt->bindValue(':nombre', $nombre, PDO::PARAM_STR);
-        $stmt->bindValue(':apellido', $apellido, PDO::PARAM_STR);
-        $stmt->bindValue(':email', $email, PDO::PARAM_STR);
-        $stmt->bindValue(':hash', $hash, PDO::PARAM_STR);
-
-        $stmt->execute();
-
-        $result = $stmt->fetch();
-
-        $_SESSION['usuarioID'] = (int)$result['usuarioID'];
-        $_SESSION['nombre'] = $nombre;
-
-        header('Location: /view/loginRegister.php');
-        exit;
-    } catch (PDOException $e) {
-        if(str_contains($e->getMessage(), 'El email ya está registrado.'))
-            $errors[] = 'Este correo electrónico ya está en uso.';
-        else {
-            error_log('Error: ' . $e->getMessage());
-            $errors[] = 'Ocurrió un error al crear tu cuenta. Intentelo de nuevo.';
-        }
+    if ($nombre === '' || $apellido === '' || $email === '' || $contrasena === '') {
+        redirigirConError('Todos los campos son obligatorios.');
     }
+
+    if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        redirigirConError('El correo electrónico no es válido.');
+    }
+
+    if (strlen($contrasena) < 8) {
+        redirigirConError('La contraseña debe tener al menos 8 caracteres.');
+    }
+
+    if ($contrasena !== $confirmar) {
+        redirigirConError('Las contraseñas no coinciden.');
+    }
+
+    $hash = password_hash($contrasena, PASSWORD_DEFAULT);
+    $resultado = registrarUsuario($nombre, $apellido, $email, $hash);
+
+    if (!$resultado['exito']) {
+        redirigirConError($resultado['error']);
+    }
+
+    $_SESSION['auth_success'] = 'Cuenta creada con éxito. Ahora puedes iniciar sesión.';
+    redirigir('/view/loginRegister.php');
 }
 
-
-function userLogin(): void {
-global $errors;
-
-    $email = trim($_POST['email'] ?? '');
+function manejarLogin(): void {
+    $email      = trim($_POST['email'] ?? '');
     $contrasena = $_POST['contrasena'] ?? '';
 
-    if (empty($email) || empty($contrasena)) {
-        $errors[] = 'Todos los campos son requeridos.';
-        return;
+    if ($email === '' || $contrasena === '') {
+        redirigirConError('Ingresa tu correo y contraseña.');
     }
 
-    try {
-        $pdo  = Database::getConnection();
-        $stmt = $pdo->prepare("CALL dbo.sp_IniciarSesion @email = :email");
-        $stmt->bindValue(':email', $email, PDO::PARAM_STR);
-        $stmt->execute();
+    $usuario = obtenerUsuarioPorEmail($email);
 
-        $usuario = $stmt->fetch();
-
-        if (!$usuario || !password_verify($contrasena, $usuario['contrasena_hash'])) {
-            $errors[] = 'Correo electrónico o contraseña incorrectos.';
-            return;
-        }
-
-        if (!$usuario['estaActivo']) {
-            $errors[] = 'Esta cuenta ha sido desactivada.';
-            return;
-        }
-
-        $_SESSION['usuarioID'] = $usuario['usuarioID'];
-        $_SESSION['nombre'] = $usuario['nombre'];
-        $_SESSION['rol'] = $usuario['rol'];
-
-        header('Location: /view/index.php');
-        exit;
-
-    } catch (PDOException $e) {
-        error_log('Error login: ' . $e->getMessage());
-        $errors[] = 'Ocurrió un error al iniciar sesión. Inténtelo de nuevo.';
+    if ($usuario === null || !password_verify($contrasena, $usuario['contrasena_hash'])) {
+        redirigirConError('Correo o contraseña incorrectos.');
     }
+
+    if ((int) $usuario['estaActivo'] === 0) {
+        redirigirConError('Esta cuenta está desactivada. Contacta a soporte.');
+    }
+
+    session_regenerate_id(true);
+
+    $_SESSION['usuarioID'] = (int) $usuario['usuarioID'];
+    $_SESSION['nombre']    = $usuario['nombre'];
+    $_SESSION['apellido']  = $usuario['apellido'];
+    $_SESSION['rol']       = (int) $usuario['rol'];
+
+    redirigir('/view/index.php');
+}
+
+function redirigirConError(string $mensaje): void {
+    $_SESSION['auth_error'] = $mensaje;
+    redirigir('/view/loginRegister.php');
+}
+
+function redirigir(string $ruta): void {
+    header("Location: $ruta");
+    exit;
 }
 ?>

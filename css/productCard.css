@@ -53,20 +53,34 @@
 }
 
 @media (max-width: 880px) {
-    .hero-seccion-contenedor {
-        flex-direction: column;
-        height: auto;
-        min-height: 900px;
+    .tarjeta {
+        height: 420px;
+        flex: 0 0 200px;
     }
 
-    .hero-texto {
-        width: 100%;
-        height: auto;
-        text-align: center;
+    .tarjeta img {
+        height: 200px;
+        width: 200px;
     }
 
-    .hero-img {
-        width: 100%;
-        height: 500px;
+    .tarjeta .tarjeta p, .tarjeta h3, .tarjeta h4 {
+        margin: 3px 10px;
+    }
+
+    .tarjeta p {
+        font-size: 13px;
+    }
+
+    .tarjeta h3 {
+        font-size: 16px;
+    }
+
+    .tarjeta h4 {
+        font-size: 15px;
+    }
+
+    .tarjeta button {
+        font-size: 15px;
+        width: 150px;
     }
 }

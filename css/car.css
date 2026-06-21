@@ -1,0 +1,27 @@
+@import url("/css/theme.css");
+@import url("/css/header.css");
+@import url("/css/footer.css");
+
+h1 {
+    margin: 20px 40px 0;
+}
+
+main {
+    display: flex;
+    width: 100%;
+    padding: 30px 50px 30px;
+}
+
+.carrito-contenedor {
+    width: 70%;
+    background-color: var(--contrast-color);
+}
+
+.confirmar-compra-contenedor {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    width: 30%;
+    padding: 10px;
+    background-color: var(--dark-accent-color);
+}
