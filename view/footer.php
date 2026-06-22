@@ -19,6 +19,10 @@
             <img src="/images/icons/envelope.svg">
             <p>correo_ejemplo@email.com</p>
         </div>
+        <div>
+            <img src="/images/icons/location.svg">
+            <p>Av. Té 950, Granjas México, Iztacalco, 08400 Ciudad de México, CDMX</p>
+        </div>
     </div>
     <div class="footer-right">
         <p class="footer-company-about">

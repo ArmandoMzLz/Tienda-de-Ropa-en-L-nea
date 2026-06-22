@@ -56,12 +56,10 @@ require_once ROOT_PATH . '/controller/registerController.php';
                 <div class="mensaje-overlay" id="mensajeOverlay">
                     <div class="mensaje-contenedor">
                         <button class="cerrar" onclick="cerrarMensaje()">&times;</button>
-
                         <?php if (!empty($_SESSION['auth_error'])): ?>
                             <p class="mensaje-error"><?= htmlspecialchars($_SESSION['auth_error'], ENT_QUOTES, 'UTF-8') ?></p>
                             <?php unset($_SESSION['auth_error']); ?>
                         <?php endif; ?>
-
                          <?php if (!empty($_SESSION['auth_success'])): ?>
                             <p class="mensaje-exito"><?= htmlspecialchars($_SESSION['auth_success'], ENT_QUOTES, 'UTF-8') ?></p>
                             <?php unset($_SESSION['auth_success']); ?>

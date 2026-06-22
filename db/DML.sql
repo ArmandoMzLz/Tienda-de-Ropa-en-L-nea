@@ -72,6 +72,58 @@ BEGIN
     WHERE ul.email = @email;
 END;
 
+CREATE PROCEDURE dbo.sp_ObtenerPerfilUsuario
+    @usuarioID INT
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    SELECT
+        u.usuarioID,
+        u.nombre,
+        u.apellido,
+        u.direccion,
+        u.numeroTelefono,
+        ul.email
+    FROM       dbo.Usuarios u
+    INNER JOIN dbo.Usuarios_Login ul ON ul.usuarioID = u.usuarioID
+    WHERE u.usuarioID = @usuarioID;
+END;
+
+CREATE PROCEDURE dbo.sp_ActualizarDireccionUsuario
+    @usuarioID INT,
+    @direccion VARCHAR(200),
+    @numeroTelefono VARCHAR(12)
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    UPDATE dbo.Usuarios
+    SET direccion = @direccion,
+        numeroTelefono = @numeroTelefono
+    WHERE usuarioID = @usuarioID;
+END;
+
+CREATE PROCEDURE dbo.sp_ObtenerContrasenaHash
+    @usuarioID INT
+AS
+BEGIN
+    SET NOCOUNT ON;
+    SELECT contrasena_hash FROM dbo.Usuarios_Login WHERE usuarioID = @usuarioID;
+END;
+
+CREATE PROCEDURE dbo.sp_ActualizarContrasena
+    @usuarioID INT,
+    @contrasena_hash VARCHAR(255)
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    UPDATE dbo.Usuarios_Login
+    SET contrasena_hash = @contrasena_hash
+    WHERE usuarioID = @usuarioID;
+END;
+
 --Productos
 CREATE INDEX ix_ProductosCategoriaMarca
 	ON dbo.Productos (categoriaID, marca)

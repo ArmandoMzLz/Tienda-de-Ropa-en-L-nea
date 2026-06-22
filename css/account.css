@@ -1,0 +1,184 @@
+@import url("/css/theme.css");
+@import url("/css/header.css");
+@import url("/css/footer.css");
+
+main {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.datos-usuario, .registrar-datos {
+    display: flex;
+    flex-direction: column;
+    width: 70%;
+    margin: 20px;
+    padding: 20px;
+    align-items: center;
+    border-radius: 10px;
+    box-shadow: 10px 10px 20px 0 rgb(130, 129, 129);
+    background-color: var(--secondary-color);
+}
+
+#formCodigoPostal {
+    margin: 10px;
+    display: flex;
+    justify-content: center;
+    gap: 5px;
+}
+
+#formCodigoPostal input {
+    width: 150px;
+    padding: 5px 10px;
+    font-size: 20px;
+    border: none;
+    border-radius: 10px;
+}
+
+#formCodigoPostal button {
+    width: 100px;
+    padding: 5px 10px;
+    font-size: 20px;
+    border: none;
+    border-radius: 10px;
+    background-color: var(--contrast-color);
+}
+
+#formDireccion {
+    display: flex;
+    flex-direction: column;
+}
+
+.datos-usuario {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+}
+
+.datos-usuario label {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    align-items: center;
+    gap: 5px;
+}
+
+.datos-usuario input {
+    width: 70%;
+    padding: 5px 10px;
+    font-size: 20px;
+    border: none;
+    border-radius: 5px;
+}
+
+#cambiarContrasena {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    align-items: center;
+    gap: 5px;
+}
+
+label {
+    margin-top: 10px;
+    font-size: 20px;
+    font-style: bold;
+}
+
+#cambiarContrasena input {
+    width: 70%;
+}
+
+#cambiarContrasena button {
+    width: 25%;
+    margin-top: 5px;
+    padding: 5px 10px;
+    font-size: 20px;
+    border: none;
+    border-radius: 10px;
+    background-color: var(--contrast-color);
+}
+
+.datos-codigo-postal {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    gap: 5px;
+}
+
+.datos-codigo-postal input {
+    width: 30%;
+    padding: 5px 10px;
+    font-size: 20px;
+    border: none;
+    border-radius: 5px;
+}
+
+.direccion-input {
+    display: flex;
+    justify-content: center;
+}
+
+.direccion-input input {
+    width: 92%;
+    margin-top: 5px;
+    padding: 5px 10px;
+    font-size: 20px;
+    border: none;
+    border-radius: 5px;
+}
+
+.numero-input {
+    display: flex;
+    justify-content: center;
+    gap: 3%;
+}
+
+.numero-input input {
+    width: 57%;
+    margin-top: 5px;
+    padding: 5px 10px;
+    font-size: 20px;
+    border: none;
+    border-radius: 5px;
+}
+
+.numero-input button {
+    width: 25%;
+    margin-top: 5px;
+    padding: 5px 10px;
+    font-size: 20px;
+    border: none;
+    border-radius: 10px;
+    background-color: var(--contrast-color);
+}
+
+@media (max-width:880px) {
+    .datos-usuario, .registrar-datos {
+        width: 90%;
+    }
+
+    .datos-codigo-postal {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .datos-codigo-postal input, .direccion-input input, .datos-usuario input, #cambiarContrasena input {
+        width: 85%;
+    }
+
+    .numero-input button {
+        font-size: 15px;
+    }
+
+    #cambiarContrasena button {
+        font-size: 15px;
+    }
+
+    .direccion-registrada-contenedor {
+        font-size: 15px;
+        background-color: white;
+    }
+}
