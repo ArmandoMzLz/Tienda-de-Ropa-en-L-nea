@@ -1,4 +1,5 @@
 USE KicksAndJerseys;
+GO
 
 --Usuarios
 CREATE PROCEDURE dbo.sp_RegistrarUsuario
@@ -52,6 +53,7 @@ BEGIN
 		THROW;
 	END CATCH;
 END;
+GO
 
 CREATE PROCEDURE dbo.sp_IniciarSesion
     @email VARCHAR(100)
@@ -71,6 +73,7 @@ BEGIN
         ON u.usuarioID = ul.usuarioID
     WHERE ul.email = @email;
 END;
+GO
 
 CREATE PROCEDURE dbo.sp_ObtenerPerfilUsuario
     @usuarioID INT
@@ -89,6 +92,7 @@ BEGIN
     INNER JOIN dbo.Usuarios_Login ul ON ul.usuarioID = u.usuarioID
     WHERE u.usuarioID = @usuarioID;
 END;
+GO
 
 CREATE PROCEDURE dbo.sp_ActualizarDireccionUsuario
     @usuarioID INT,
@@ -103,6 +107,7 @@ BEGIN
         numeroTelefono = @numeroTelefono
     WHERE usuarioID = @usuarioID;
 END;
+GO
 
 CREATE PROCEDURE dbo.sp_ObtenerContrasenaHash
     @usuarioID INT
@@ -111,6 +116,7 @@ BEGIN
     SET NOCOUNT ON;
     SELECT contrasena_hash FROM dbo.Usuarios_Login WHERE usuarioID = @usuarioID;
 END;
+GO
 
 CREATE PROCEDURE dbo.sp_ActualizarContrasena
     @usuarioID INT,
@@ -123,15 +129,48 @@ BEGIN
     SET contrasena_hash = @contrasena_hash
     WHERE usuarioID = @usuarioID;
 END;
+GO
+
+CREATE PROCEDURE dbo.sp_ObtenerSaldo
+    @usuarioID INT
+AS
+BEGIN
+    SET NOCOUNT ON;
+    SELECT balance FROM dbo.Usuario_Cartera WHERE usuarioID = @usuarioID;
+END;
+GO
+
+CREATE PROCEDURE dbo.sp_RecargarSaldo
+    @usuarioID INT,
+    @monto DECIMAL(10,2)
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    IF @monto <= 0
+    BEGIN
+        THROW 50003, 'El monto a recargar debe ser mayor a cero.', 1;
+        RETURN;
+    END
+
+    UPDATE dbo.Usuario_Cartera
+    SET balance = balance + @monto
+    WHERE usuarioID = @usuarioID;
+
+    SELECT balance FROM dbo.Usuario_Cartera WHERE usuarioID = @usuarioID;
+END;
+GO
 
 --Productos
 CREATE INDEX ix_ProductosCategoriaMarca
 	ON dbo.Productos (categoriaID, marca)
 	INCLUDE (nombre, precioBase, estaDisponible, imagenBaseURL);
+GO
 
 CREATE INDEX ix_VariantesProductoID
 	ON dbo.Productos_Variantes (productoID)
 	INCLUDE (cantidad);
+GO
 
 CREATE PROCEDURE dbo.sp_ProductosBuscar
 	@categoriaID INT = NULL,
@@ -159,7 +198,7 @@ BEGIN
 	WHERE (
 		@categoriaID IS NULL OR p.categoriaID = @categoriaID)
 		AND (@marca IS NULL OR p.marca LIKE '%' + @marca + '%')
-		AND (@nombre IS NULL OR p.nombre LIKE '%')
+		AND (@nombre IS NULL OR p.nombre LIKE '%' + @nombre + '%')
 		AND (@soloDisponible = 0 OR p.estaDisponible = 1)
 	GROUP BY
 		p.productoID, p.marca, p.nombre, p.precioBase, p.estaDisponible, p.imagenBaseURL, c.nombre
@@ -168,6 +207,7 @@ BEGIN
 	FETCH NEXT @tamanoPagina ROWS ONLY
 	OPTION (RECOMPILE);
 END;
+GO
 
 CREATE PROCEDURE dbo.sp_ProductosPorCategoria
 	@categoriaID INT,
@@ -191,6 +231,7 @@ BEGIN
 		p.productoID, p.marca, p.nombre, p.precioBase, p.imagenBaseURL
 	ORDER BY p.nombre;
 END;
+GO
 
 CREATE PROCEDURE dbo.sp_ProductosSimilares
 	@productoID INT,
@@ -214,6 +255,7 @@ BEGIN
 		AND p.estaDisponible = 1
 	ORDER BY prioridad, p.nombre
 END;
+GO
 
 CREATE PROCEDURE dbo.sp_ProductosPorID
     @productoID INT
@@ -242,5 +284,165 @@ BEGIN
     WHERE productoID = @productoID
     ORDER BY talla;
 END;
+GO
+
+CREATE PROCEDURE dbo.sp_ProductosBuscarGeneral
+    @nombre       VARCHAR(100) = NULL,
+    @categoriaID  INT          = NULL,
+    @marcas       VARCHAR(500) = NULL,
+    @ordenar      VARCHAR(20)  = 'populares',
+    @pagina       INT          = 1,
+    @tamanoPagina INT          = 20,
+    @totalFilas   INT          OUTPUT
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    CREATE TABLE #Marcas (marca VARCHAR(30));
+
+    IF @marcas IS NOT NULL AND LTRIM(RTRIM(@marcas)) <> ''
+    BEGIN
+        INSERT INTO #Marcas (marca)
+        SELECT LTRIM(RTRIM(value))
+        FROM STRING_SPLIT(@marcas, ',')
+        WHERE LTRIM(RTRIM(value)) <> '';
+    END
+
+    SELECT @totalFilas = COUNT(DISTINCT p.productoID)
+    FROM dbo.Productos p
+    INNER JOIN dbo.Productos_Categorias c ON c.categoriaID = p.categoriaID
+    WHERE
+        p.estaDisponible = 1
+        AND (@nombre      IS NULL OR p.nombre LIKE '%' + @nombre + '%')
+        AND (@categoriaID IS NULL OR p.categoriaID = @categoriaID)  -- Comparación directa por ID
+        AND (
+            NOT EXISTS (SELECT 1 FROM #Marcas)
+            OR LOWER(p.marca) IN (SELECT marca FROM #Marcas)
+        );
+
+    SELECT
+        p.productoID,
+        p.marca,
+        p.nombre,
+        p.precioBase,
+        p.imagenBaseURL,
+        c.nombre AS categoria,
+        COALESCE(SUM(v.cantidad), 0) AS stockTotal
+    FROM dbo.Productos p
+    INNER JOIN dbo.Productos_Categorias c ON c.categoriaID = p.categoriaID
+    LEFT  JOIN dbo.Productos_Variantes  v ON v.productoID  = p.productoID
+    WHERE
+        p.estaDisponible = 1
+        AND (@nombre      IS NULL OR p.nombre LIKE '%' + @nombre + '%')
+        AND (@categoriaID IS NULL OR p.categoriaID = @categoriaID)
+        AND (
+            NOT EXISTS (SELECT 1 FROM #Marcas)
+            OR LOWER(p.marca) IN (SELECT marca FROM #Marcas)
+        )
+    GROUP BY
+        p.productoID, p.marca, p.nombre,
+        p.precioBase, p.imagenBaseURL, c.nombre
+    ORDER BY
+        CASE WHEN @ordenar = 'precio_asc'  THEN p.precioBase END ASC,
+        CASE WHEN @ordenar = 'precio_desc' THEN p.precioBase END DESC,
+        CASE WHEN @ordenar = 'populares'   THEN COALESCE(SUM(v.cantidad), 0) END DESC,
+        p.nombre ASC
+    OFFSET (@pagina - 1) * @tamanoPagina ROWS
+    FETCH NEXT @tamanoPagina ROWS ONLY
+    OPTION (RECOMPILE);
+
+    DROP TABLE #Marcas;
+END;
+GO
+
+CREATE PROCEDURE dbo.sp_ObtenerInventario
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    SELECT
+        p.productoID,
+        p.marca,
+        p.nombre,
+        p.precioBase,
+        p.estaDisponible,
+        p.imagenBaseURL,
+        c.nombre AS categoriaNombre,
+        v.varianteID,
+        v.talla,
+        v.cantidad AS stock
+    FROM       dbo.Productos p
+    INNER JOIN dbo.Productos_Categorias c ON c.categoriaID = p.categoriaID
+    LEFT  JOIN dbo.Productos_Variantes v  ON v.productoID = p.productoID
+    ORDER BY p.nombre, v.talla;
+END;
+GO
 
 --Pedidos
+CREATE PROCEDURE dbo.sp_ObtenerDetalleVariante
+    @varianteID INT
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    SELECT
+        v.varianteID, v.talla, v.cantidad AS stockDisponible,
+        p.productoID, p.marca, p.nombre, p.precioBase, p.imagenBaseURL, p.estaDisponible
+    FROM dbo.Productos_Variantes v
+    INNER JOIN dbo.Productos p ON p.productoID = v.productoID
+    WHERE v.varianteID = @varianteID;
+END;
+GO
+
+CREATE PROCEDURE dbo.sp_CrearPedido
+    @usuarioID INT, 
+    @estatus INT, 
+    @total DECIMAL(10,2)
+AS
+BEGIN
+    SET NOCOUNT ON;
+    INSERT INTO dbo.Pedidos (usuarioID, estatus, total, fecha)
+    VALUES (@usuarioID, @estatus, @total, GETDATE());
+    SELECT SCOPE_IDENTITY() AS pedidoID;
+END;
+GO
+
+CREATE PROCEDURE dbo.sp_AgregarDetallePedido
+    @pedidoID INT, 
+    @productoID INT, 
+    @varianteID INT, 
+    @cantidad INT, 
+    @precioUnitario DECIMAL(10,2)
+AS
+BEGIN
+    SET NOCOUNT ON;
+    INSERT INTO dbo.Pedidos_Detalles (pedidoID, productoID, varianteID, cantidad, precioUnitario)
+    VALUES (@pedidoID, @productoID, @varianteID, @cantidad, @precioUnitario);
+END;
+GO
+
+CREATE PROCEDURE dbo.sp_ReducirStockVariante
+    @varianteID INT, 
+    @cantidad INT
+AS
+BEGIN
+    SET NOCOUNT ON;
+    UPDATE dbo.Productos_Variantes
+    SET cantidad = cantidad - @cantidad
+    WHERE varianteID = @varianteID AND cantidad >= @cantidad;
+    SELECT @@ROWCOUNT AS filasAfectadas; -- 0 = no había suficiente stock
+END;
+GO
+
+CREATE PROCEDURE dbo.sp_DescontarSaldo
+    @usuarioID INT, 
+    @monto DECIMAL(10,2)
+AS
+BEGIN
+    SET NOCOUNT ON;
+    UPDATE dbo.Usuario_Cartera
+    SET balance = balance - @monto
+    WHERE usuarioID = @usuarioID AND balance >= @monto;
+    SELECT @@ROWCOUNT AS filasAfectadas; -- 0 = saldo insuficiente
+END;
+GO

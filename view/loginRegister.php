@@ -1,6 +1,6 @@
 <?php 
 require_once dirname(__DIR__) . '/bootstrap.php';
-require_once ROOT_PATH . '/controller/registerController.php';
+require_once ROOT_PATH . '/model/registerController.php';
 ?>
 
 <!DOCTYPE html>

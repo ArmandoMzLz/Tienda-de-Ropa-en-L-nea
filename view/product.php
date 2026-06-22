@@ -1,6 +1,6 @@
 <?php 
     require_once dirname(__DIR__) . '/bootstrap.php';
-    require_once ROOT_PATH . '/controller/getItemsController.php';
+    require_once ROOT_PATH . '/model/getItemsController.php';
     require_once ROOT_PATH . '/controller/productCardController.php';
 
     $productoID = (int) ($_GET['id' ?? 0]);
@@ -39,8 +39,15 @@
                                 $talla = htmlspecialchars($variante['talla'], ENT_QUOTES, 'UTF-8');
                                 $inputId = 'talla-' . $talla;
                             ?>
-                            <input type="radio" name="talla" id="<?= $inputId ?>" value="<?= $talla ?>" data-stock="<?= (int) $variante['cantidad'] ?>" class="talla-radio">
+                            <input type="radio"
+                                name="talla"
+                                id="<?= $inputId ?>"
+                                value="<?= $talla ?>"
+                                data-stock="<?= (int) $variante['cantidad'] ?>"
+                                data-variante-id="<?= (int) $variante['varianteID'] ?>"
+                                class="talla-radio">
                             <label for="<?= $inputId ?>" class="talla-label"><?= $talla ?></label>
+                            <input type="hidden" name="csrf_token" id="csrfToken" value="<?= htmlspecialchars($_SESSION['csrf_token']) ?>">
                         <?php endif; ?>
                     <?php endforeach; ?>
                 </div>

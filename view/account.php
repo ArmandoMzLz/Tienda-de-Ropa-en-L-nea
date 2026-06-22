@@ -1,6 +1,6 @@
 <?php 
 require_once dirname(__DIR__) . '/bootstrap.php';
-require_once ROOT_PATH . '/controller/registerController.php';
+require_once ROOT_PATH . '/model/registerController.php';
 
 if (empty($_SESSION['usuarioID'])) {
     header('Location: /view/loginRegister.php');
@@ -64,7 +64,6 @@ $perfil = obtenerPerfilUsuario((int) $_SESSION['usuarioID']);
                     <button type="submit">Buscar</button>
                 </form>
                 <p id="mensajeCP" class="mensaje-error" style="display:none;"></p>
-
                 <form method="post" action="/controller/direccionController.php" id="formDireccion">
                     <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($_SESSION['csrf_token']) ?>">
                     <div class="datos-codigo-postal">

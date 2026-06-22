@@ -41,3 +41,35 @@ cantidad.addEventListener('blur', function () {
     if(valorActual > maxValor)
         this.value = maxValor;
 });
+
+document.querySelector('.anadir-carrito-button').addEventListener('click', async () => {
+    const seleccionada = document.querySelector('input[name="talla"]:checked');
+
+    if (!seleccionada) {
+        alert('Por favor selecciona una talla');
+        return;
+    }
+
+    const varianteID = seleccionada.dataset.varianteId;
+    const cantidad = parseInt(document.getElementById('cantidad').value, 10);
+    const csrfToken = document.getElementById('csrfToken').value;
+
+    try {
+        const respuesta = await fetch('/controller/carritoAjaxController.php', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+            body: new URLSearchParams({ accion: 'agregar', varianteID, cantidad, csrf_token: csrfToken })
+        });
+
+        const datos = await respuesta.json();
+
+        if (!datos.exito) {
+            alert(datos.error);
+            return;
+        }
+
+        alert('Producto agregado al carrito');
+    } catch (error) {
+        alert('Ocurrió un error al agregar el producto al carrito.');
+    }
+});

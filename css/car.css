@@ -15,6 +15,7 @@ main {
 .carrito-contenedor {
     width: 70%;
     background-color: var(--contrast-color);
+    box-shadow: 10px 10px 20px 0 rgb(130, 129, 129);
 }
 
 .confirmar-compra-contenedor {
@@ -24,4 +25,153 @@ main {
     width: 30%;
     padding: 10px;
     background-color: var(--dark-accent-color);
+    box-shadow: 10px 10px 20px 0 rgb(130, 129, 129);
+}
+
+.botones-confirmar-compra {
+    margin-top: 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+}
+
+.botones-confirmar-compra button {
+    width: 300px;
+    height: 50px;
+    font-size: 20px;
+    font-weight: bold;
+    border: none;
+    border-radius: 10px;
+    background-color: var(--contrast-color);
+}
+
+.botones-confirmar-compra .seguir-comprando {
+    background-color: var(--darker-contrast-color);
+}
+
+.carrusel-contenedor {
+    display: flex;
+    width: 95%;
+    overflow-x: auto;
+    overflow-y: hidden;
+}
+
+.grupo {
+    display: flex;
+    gap: 10px;
+}
+
+.tarjeta {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    flex: 0 0 300px;
+    height: 520px;
+    margin: 10px;
+    border-radius: 10px;
+    background-color: var(--secondary-color);
+}
+
+.tarjeta img {
+    height: 300px;
+    width: 300px;
+    object-fit: cover;
+    display: block;
+}
+
+.tarjeta p, .tarjeta h3, .tarjeta h4 {
+    margin: 3px 15px;
+    font-weight: bold;
+}
+
+.tarjeta p {
+    color: var(--contrast-color);
+}
+
+.tarjeta h3 {
+    font-size: 10px;
+}
+
+.tarjeta h4 {
+    font-size: 10px;
+    color: var(--darker-contrast-color);
+}
+
+.tarjeta .cantidad-carrito {
+    display: flex;
+    width: 100%;
+    justify-content: center;
+    align-items: center;
+}
+
+.cantidad-carrito span {
+    display: inline-block;
+    background-color: var(--contrast-color);
+}
+
+.cantidad-carrito span:hover {
+    cursor: pointer;
+}
+
+.cantidad-carrito input {
+    width: 30px;
+}
+
+.tarjeta button {
+    height: 40px;
+    width: 200px;
+    font-size: 20px;
+    font-weight: bold;
+    border: none;
+    border-radius: 10px;
+    margin: auto auto 20px auto;
+    background-color: var(--dark-accent-color);
+}
+
+@media (max-width: 880px) {
+    main {
+        padding: 30px;
+        flex-direction: column;
+    }
+
+    .carrito-contenedor {
+        width: 100%;
+    }
+
+    .confirmar-compra-contenedor {
+        width: 100%;
+    }
+
+    .tarjeta {
+        height: 460px;
+        flex: 0 0 200px;
+    }
+
+    .tarjeta img {
+        height: 200px;
+        width: 200px;
+    }
+
+    .tarjeta .tarjeta p, .tarjeta h3, .tarjeta h4 {
+        margin: 3px 10px;
+    }
+
+    .tarjeta p {
+        font-size: 13px;
+    }
+
+    .tarjeta h3 {
+        font-size: 15px;
+    }
+
+    .tarjeta h4 {
+        font-size: 13px;
+    }
+
+    .tarjeta button {
+        font-size: 15px;
+        width: 150px;
+    }
 }

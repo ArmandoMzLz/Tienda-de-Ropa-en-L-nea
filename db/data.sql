@@ -1,17 +1,72 @@
 USE KicksAndJerseys
+GO
 
 --Datos base
 INSERT INTO dbo.Usuarios_Roles(nombre) 
 	VALUES ('Cliente'), ('Administrador');
 
 INSERT INTO dbo.Productos_Categorias(nombre)
-	VALUES ('Playeras Jerseys'), ('Tenis'), ('Tenis Deportivos'), ('Tenis para Correr'), ('Pants Pantalon'), ('Hoodies Sudadera');
+	VALUES ('Playeras Jerseys'), ('Tenis'), ('Tenis Deportivos'), ('Tenis para Correr');
 
-INSERT INTO dbo.Pedidos_Status(nombre)
-	VALUES ('Pagado'), ('Enviado'), ('Entregado'), ('Cancelado');
+SELECT * FROM dbo.Productos_Categorias
+
+INSERT INTO dbo.Pedidos_Status (nombre) 
+	VALUES ('Pendiente'), ('Pagado'), ('Enviado'), ('Entregado'), ('Cancelado');
 
 INSERT INTO dbo.Transacciones_Tipos(nombre)
 	VALUES ('Recarga'), ('Compra'), ('Devolución');
+
+CREATE PROCEDURE dbo.sp_RegistrarAdministrador
+	@nombre VARCHAR(50),
+	@apellido VARCHAR(50),
+	@email VARCHAR(100),
+	@contrasena_hash VARCHAR(255)
+AS
+BEGIN
+	SET NOCOUNT ON;
+
+	IF EXISTS(SELECT 1 FROM dbo.Usuarios_Login WHERE email = @email)
+	BEGIN
+		THROW 50001, 'El email ya está registrado.', 1;
+		RETURN;
+	END
+
+	DECLARE @usuarioID INT;
+	DECLARE @rolAdmin INT;
+
+	SELECT @rolAdmin = rolID
+	FROM dbo.Usuarios_Roles
+	WHERE nombre = 'Administrador';
+
+	IF @rolAdmin IS NULL
+	BEGIN
+		THROW 50002, 'No existe el rol Administrador en Usuarios_Roles.', 1;
+		RETURN;
+	END
+
+	BEGIN TRANSACTION;
+	BEGIN TRY
+		INSERT INTO dbo.Usuarios(nombre, apellido, estaActivo, rol)
+		VALUES(@nombre, @apellido, 1, @rolAdmin);
+
+		SET @usuarioID = SCOPE_IDENTITY();
+
+		INSERT INTO dbo.Usuarios_Login(usuarioID, email, contrasena_hash)
+		VALUES(@usuarioID, @email, @contrasena_hash);
+
+		INSERT INTO dbo.Usuario_Cartera(usuarioID, balance)
+		VALUES(@usuarioID, 0.00);
+
+		COMMIT TRANSACTION;
+		SELECT @usuarioID AS usuarioID;
+	END TRY
+	BEGIN CATCH
+		IF @@TRANCOUNT > 0
+			ROLLBACK TRANSACTION;
+		THROW;
+	END CATCH;
+END;
+GO
 
 --Datos de muestra
 INSERT INTO dbo.Productos (categoriaID, marca, nombre, precioBase, estaDisponible, imagenBaseURL) 

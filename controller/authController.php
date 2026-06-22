@@ -1,6 +1,6 @@
 <?php
 require_once dirname(__DIR__) . '/bootstrap.php';
-require_once ROOT_PATH . '/controller/registerController.php';
+require_once ROOT_PATH . '/model/registerController.php';
 
 if (
     !isset($_POST['csrf_token'], $_SESSION['csrf_token']) ||
@@ -14,16 +14,16 @@ $accion = $_POST['action'] ?? '';
 
 match ($accion) {
     'register' => manejarRegistro(),
-    'login'    => manejarLogin(),
-    default    => redirigir('/view/loginRegister.php'),
+    'login' => manejarLogin(),
+    default => redirigir('/view/loginRegister.php'),
 };
 
 function manejarRegistro(): void {
-    $nombre     = trim($_POST['nombre'] ?? '');
-    $apellido   = trim($_POST['apellido'] ?? '');
-    $email      = trim($_POST['email'] ?? '');
+    $nombre = trim($_POST['nombre'] ?? '');
+    $apellido = trim($_POST['apellido'] ?? '');
+    $email = trim($_POST['email'] ?? '');
     $contrasena = $_POST['contrasena'] ?? '';
-    $confirmar  = $_POST['confirmar'] ?? '';
+    $confirmar = $_POST['confirmar'] ?? '';
 
     if ($nombre === '' || $apellido === '' || $email === '' || $contrasena === '') {
         redirigirConError('Todos los campos son obligatorios.');
@@ -72,12 +72,18 @@ function manejarLogin(): void {
 
     session_regenerate_id(true);
 
+    $rolUsuario = (int) $usuario['rol'];
+
     $_SESSION['usuarioID'] = (int) $usuario['usuarioID'];
     $_SESSION['nombre']    = $usuario['nombre'];
     $_SESSION['apellido']  = $usuario['apellido'];
-    $_SESSION['rol']       = (int) $usuario['rol'];
+    $_SESSION['rol']       = $rolUsuario;
 
-    redirigir('/view/index.php');
+    if ($rolUsuario === 2) {
+        redirigir('/view/dashboard.php');
+    } else {
+        redirigir('/view/index.php');
+    }
 }
 
 function redirigirConError(string $mensaje): void {

@@ -19,42 +19,42 @@
                 </div>
             </div>
             <div class="marca-contenedor">
-                <a href="#">
+                <div class="marca">
                     <div class="marca-tarjeta">
                         <img src="/images/Adidas_logo.png">
                     </div>
-                </a>
-                <a href="#">
+                </div>
+                <div class="marca">
                     <div class="marca-tarjeta">
                         <img src="/images/Nike_logo.png">
                     </div>
-                </a>
-                <a href="#">
+                </div>
+                <div class="marca">
                     <div class="marca-tarjeta">
                         <img src="/images/Reebok_logo.png">
                     </div>
-                </a>
-                <a href="#">
+                </div>
+                <div class="marca">
                     <div class="marca-tarjeta">
                         <img src="/images/Puma_logo.png">
                     </div>
-                </a>
-                <a href="#">
+                </div>
+                <div class="marca">
                     <div class="marca-tarjeta">
                         <img src="/images/Jordan_logo.png">
                     </div>
-                </a>
-                <a href="#">
+                </div>
+                <div class="marca">
                     <div class="marca-tarjeta">
                         <img src="/images/Under_armour_logo.png">
                     </div>
-                </a>
+                </div>
             </div>
             <h1>Ropa</h1>
             <h1>Jerseys</h1>
                 <?php
                     define('ROOT_PATH', dirname(__DIR__));
-                    require_once ROOT_PATH . '/controller/getItemsController.php';
+                    require_once ROOT_PATH . '/model/getItemsController.php';
                     require_once ROOT_PATH . '/controller/productCardController.php';
 
                     $categoriaID = (int) ($_GET['categoriaID'] ?? 1);
@@ -79,7 +79,7 @@
                 <button>Ver más ></button>
             </div>
                 <?php
-                    require_once ROOT_PATH . '/controller/getItemsController.php';
+                    require_once ROOT_PATH . '/model/getItemsController.php';
                     require_once ROOT_PATH . '/controller/productCardController.php';
 
                     $categoriaID = (int) ($_GET['categoriaID'] ?? 2);
@@ -103,7 +103,7 @@
                 <button>Ver más ></button>
             </div>
                 <?php
-                    require_once ROOT_PATH . '/controller/getItemsController.php';
+                    require_once ROOT_PATH . '/model/getItemsController.php';
                     require_once ROOT_PATH . '/controller/productCardController.php';
 
                     $categoriaID = (int) ($_GET['categoriaID'] ?? 3);
@@ -127,7 +127,7 @@
                 <button>Ver más ></button>
             </div>
                 <?php
-                    require_once ROOT_PATH . '/controller/getItemsController.php';
+                    require_once ROOT_PATH . '/model/getItemsController.php';
                     require_once ROOT_PATH . '/controller/productCardController.php';
 
                     $categoriaID = (int) ($_GET['categoriaID'] ?? 4);

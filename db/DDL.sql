@@ -1,7 +1,16 @@
 CREATE DATABASE KicksAndJerseys;
+GO
+
 USE KicksAndJerseys;
+GO
 
 --Usuarios
+CREATE TABLE dbo.Usuarios_Roles (
+	rolID INT IDENTITY(1,1) PRIMARY KEY,
+	nombre VARCHAR(15) NOT NULL
+);
+GO
+
 CREATE TABLE dbo.Usuarios (
 	usuarioID INT IDENTITY(1,1) PRIMARY KEY,
 	nombre VARCHAR(50) NOT NULL,
@@ -14,6 +23,7 @@ CREATE TABLE dbo.Usuarios (
 	FOREIGN KEY (rol)
 		REFERENCES dbo.Usuarios_Roles(rolID)
 );
+GO
 
 CREATE TABLE dbo.Usuarios_Login (
 	usuarioID INT NOT NULL PRIMARY KEY,
@@ -23,6 +33,7 @@ CREATE TABLE dbo.Usuarios_Login (
 	FOREIGN KEY(usuarioID)
 		REFERENCES dbo.Usuarios(usuarioID)
 );
+GO
 
 CREATE TABLE dbo.Usuario_Cartera (
 	carteraID INT IDENTITY(1,1) PRIMARY KEY,
@@ -32,16 +43,15 @@ CREATE TABLE dbo.Usuario_Cartera (
 	FOREIGN KEY(usuarioID)
 		REFERENCES dbo.Usuarios(usuarioID)
 );
-
-CREATE TABLE dbo.Usuarios_Roles (
-	rolID INT IDENTITY(1,1) PRIMARY KEY,
-	nombre VARCHAR(15) NOT NULL
-);
-
-SELECT * FROM dbo.Usuarios
-SELECT * FROM dbo.Usuarios_Login
+GO
 
 --Productos
+CREATE TABLE dbo.Productos_Categorias(
+	categoriaID INT IDENTITY(1,1) PRIMARY KEY,
+	nombre VARCHAR(30) NOT NULL
+);
+GO
+
 CREATE TABLE dbo.Productos (
 	productoID INT IDENTITY(1,1) PRIMARY KEY,
 	categoriaID INT NOT NULL,
@@ -54,6 +64,7 @@ CREATE TABLE dbo.Productos (
 	FOREIGN KEY(categoriaID)
 		REFERENCES dbo.Productos_Categorias(categoriaID)
 );
+GO
 
 CREATE TABLE dbo.Productos_Variantes(
 	varianteID INT IDENTITY(1,1) PRIMARY KEY,
@@ -64,13 +75,15 @@ CREATE TABLE dbo.Productos_Variantes(
 	FOREIGN KEY(productoID)
 		REFERENCES dbo.Productos(productoID)
 );
-
-CREATE TABLE dbo.Productos_Categorias(
-	categoriaID INT IDENTITY(1,1) PRIMARY KEY,
-	nombre VARCHAR(30) NOT NULL
-);
+GO
 
 --Pedidos
+CREATE TABLE dbo.Pedidos_Status(
+	statusID INT IDENTITY(1,1) PRIMARY KEY,
+	nombre VARCHAR(20) NOT NULL
+);
+GO
+
 CREATE TABLE dbo.Pedidos(
 	pedidoID INT IDENTITY(1,1) PRIMARY KEY,
 	usuarioID INT NOT NULL,
@@ -84,9 +97,11 @@ CREATE TABLE dbo.Pedidos(
 	FOREIGN KEY(estatus)
 		REFERENCES dbo.Pedidos_Status(statusID)
 );
+GO
 
 CREATE TABLE dbo.Pedidos_Detalles(
-	pedidoID INT IDENTITY(1,1) NOT NULL PRIMARY KEY,
+	detalleID INT IDENTITY (1,1) PRIMARY KEY,
+	pedidoID INT NOT NULL,
 	productoID INT NOT NULL,
 	varianteID INT NOT NULL,
 	cantidad INT NOT NULL,
@@ -101,13 +116,15 @@ CREATE TABLE dbo.Pedidos_Detalles(
 	FOREIGN KEY(varianteID)
 		REFERENCES dbo.Productos_Variantes(varianteID)
 );
-
-CREATE TABLE dbo.Pedidos_Status(
-	statusID INT IDENTITY(1,1) PRIMARY KEY,
-	nombre VARCHAR(20) NOT NULL
-);
+GO
 
 --Transacciones
+CREATE TABLE dbo.Transacciones_Tipos(
+	tipoID INT IDENTITY(1,1) PRIMARY KEY,
+	nombre VARCHAR(15) NOT NULL
+);
+GO
+
 CREATE TABLE dbo.Transacciones(
 	transaccionID INT IDENTITY(1,1) PRIMARY KEY,
 	carteraID INT NOT NULL,
@@ -118,8 +135,4 @@ CREATE TABLE dbo.Transacciones(
 	FOREIGN KEY(tipoID)
 		REFERENCES dbo.Transacciones_Tipos(tipoID)
 );
-
-CREATE TABLE dbo.Transacciones_Tipos(
-	tipoID INT IDENTITY(1,1) PRIMARY KEY,
-	nombre VARCHAR(15) NOT NULL
-);
+GO

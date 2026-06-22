@@ -57,7 +57,7 @@ main {
     justify-content: center;
 }
 
-.marca-contenedor a .marca-tarjeta {
+.marca-contenedor .marca .marca-tarjeta {
     display: flex;
     width: 190px;
     height: 190px;
@@ -65,14 +65,13 @@ main {
     justify-content: center;
     background-color: #eaeeef;
     box-shadow: 2px 2px 3px #b1b2b2;
-    cursor: pointer;
 }
 
-.marca-contenedor a .marca-tarjeta:hover {
+.marca-contenedor .marca .marca-tarjeta:hover {
     transform: scale(1.1);
 }
 
-.marca-contenedor a .marca-tarjeta img {
+.marca-contenedor .marca .marca-tarjeta img {
     width: 140px;
     height: 90px;
     object-fit: contain;

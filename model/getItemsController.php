@@ -78,4 +78,47 @@
             return null;
         }
     }
+
+    function obtenerInventario(): array {
+    try {
+        $pdo = Database::getConnection();
+        $stmt = $pdo->prepare("{CALL dbo.sp_ObtenerInventario}");
+        $stmt->execute();
+        $filas = $stmt->fetchAll();
+
+        $productos = [];
+        foreach ($filas as $fila) {
+            $productoID = (int) $fila['productoID'];
+
+            if (!isset($productos[$productoID])) {
+                $productos[$productoID] = [
+                    'productoID' => $productoID,
+                    'marca' => $fila['marca'],
+                    'nombre' => $fila['nombre'],
+                    'precioBase' => (float) $fila['precioBase'],
+                    'estaDisponible' => (bool) $fila['estaDisponible'],
+                    'imagenBaseURL' => $fila['imagenBaseURL'],
+                    'categoriaNombre' => $fila['categoriaNombre'],
+                    'variantes' => [],
+                    'stockTotal' => 0,
+                ];
+            }
+
+            if ($fila['varianteID'] !== null) {
+                $productos[$productoID]['variantes'][] = [
+                    'varianteID' => (int) $fila['varianteID'],
+                    'talla'      => $fila['talla'],
+                    'stock'      => (int) $fila['stock'],
+                ];
+                $productos[$productoID]['stockTotal'] += (int) $fila['stock'];
+            }
+        }
+
+        return array_values($productos);
+
+    } catch (PDOException $e) {
+        error_log('Error al obtener inventario: ' . $e->getMessage());
+        return [];
+    }
+}
 ?>

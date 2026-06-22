@@ -1,77 +1,39 @@
-const incBoton = document.getElementById('btnArriba');
-const decBoton = document.getElementById('btnAbajo');
-const cantidad = document.getElementById('cantidad');
+document.getElementById('numeroTarjeta').addEventListener('input', (e) => {
+    let valor = e.target.value.replace(/\D/g, '').slice(0, 19);
+    e.target.value = valor.replace(/(.{4})/g, '$1 ').trim();
+});
 
-const inc10Boton = document.getElementById('inc10');
-const inc100Boton = document.getElementById('inc100');
-const inc1000Boton = document.getElementById('inc1000');
+document.getElementById('codigoSeguridad').addEventListener('input', (e) => {
+    e.target.value = e.target.value.replace(/\D/g, '').slice(0, 4);
+});
 
-const minValor = 1;
-const maxValor = 10000;
-
-incBoton.addEventListener("click", () => {
-    let valorActual = parseInt(cantidad.value, 10);
-
-    if(valorActual < maxValor) {
-        valorActual = isNaN(valorActual)? 0 : valorActual;
-        cantidad.value = valorActual + 1;
+document.getElementById('vencimiento').addEventListener('input', (e) => {
+    let valor = e.target.value.replace(/\D/g, '').slice(0, 4);
+    if (valor.length > 2) {
+        valor = valor.slice(0, 2) + '/' + valor.slice(2);
     }
+    e.target.value = valor;
 });
 
-decBoton.addEventListener("click", () => {
-    let valorActual = parseInt(cantidad.value, 10);
+const MONTO_MINIMO = 10;
+const MONTO_MAXIMO = 50000;
+const inputCantidad = document.getElementById('cantidad');
 
-    if(valorActual > minValor) {
-        valorActual = isNaN(valorActual)? 0 : valorActual;
-        cantidad.value = valorActual - 1;
+function ajustarMonto(diferencia) {
+    const valorActual = parseInt(inputCantidad.value, 10) || 0;
+    const nuevoValor = Math.max(MONTO_MINIMO, Math.min(MONTO_MAXIMO, valorActual + diferencia));
+    inputCantidad.value = nuevoValor;
+}
+
+document.getElementById('btnAbajo').addEventListener('click', () => ajustarMonto(-1));
+document.getElementById('btnArriba').addEventListener('click', () => ajustarMonto(1));
+document.getElementById('inc10').addEventListener('click', () => ajustarMonto(10));
+document.getElementById('inc100').addEventListener('click', () => ajustarMonto(100));
+document.getElementById('inc1000').addEventListener('click', () => ajustarMonto(1000));
+
+function cerrarMensaje() {
+    const overlay = document.getElementById("mensajeOverlay");
+    if (overlay) {
+        overlay.remove();
     }
-});
-
-inc10Boton.addEventListener("click", () => {
-    let valorActual = parseInt(cantidad.value, 10);
-
-    if(valorActual < (maxValor - 10)) {
-        valorActual = isNaN(valorActual)? 0 : valorActual;
-        cantidad.value = valorActual + 10;
-    } else {
-        cantidad.value = valorActual + (maxValor - valorActual);
-    }
-});
-
-inc100Boton.addEventListener("click", () => {
-    let valorActual = parseInt(cantidad.value, 10);
-
-    if(valorActual < (maxValor - 100)) {
-        valorActual = isNaN(valorActual)? 0 : valorActual;
-        cantidad.value = valorActual + 100;
-    } else {
-        cantidad.value = valorActual + (maxValor - valorActual);
-    }
-});
-
-inc1000Boton.addEventListener("click", () => {
-    let valorActual = parseInt(cantidad.value, 10);
-
-    if(valorActual < (maxValor - 1000)) {
-        valorActual = isNaN(valorActual)? 0 : valorActual;
-        cantidad.value = valorActual + 1000;
-    } else {
-        cantidad.value = valorActual + (maxValor - valorActual);
-    }
-});
-
-cantidad.addEventListener('input', function () {
-    this.value = this.value.replace(/[^0-9]/g, '');
-});
-
-cantidad.addEventListener('blur', function () {
-    if(this.value === '')
-        this.value = 1;
-
-    const valorActual = parseInt(this.value, 10);
-
-    if(valorActual < minValor)
-        this.value = minValor;
-    if(valorActual > maxValor)
-        this.value = maxValor;
-});
+}
